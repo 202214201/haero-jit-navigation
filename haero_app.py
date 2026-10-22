@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import joblib
+from lighthouse_hero import draw_lighthouse
 
 
 # =========================================================
@@ -90,9 +91,122 @@ with st.sidebar:
 
 def main_page():
 
-    st.title(
-        "⚓ 해로(海路): JIT 입항 내비게이션"
+    # =====================================================
+    # 1. 메인 배너
+    # =====================================================
+
+    st.image(
+        "banner.png",
+        use_container_width=True
     )
+
+
+    # =====================================================
+    # 2. 등대 표지
+    # =====================================================
+
+    dark_mode = st.toggle(
+        "🌙 야간모드",
+        key="lighthouse_dark"
+    )
+
+    draw_lighthouse(
+        "dark" if dark_mode else "light"
+    )
+
+
+    # =====================================================
+    # 3. 소개 문구
+    # =====================================================
+
+    st.markdown(
+        "### 바다 위의 하이패스, 대기 없는 항해를 시작하세요."
+    )
+
+    st.write("---")
+
+
+    # =====================================================
+    # 4. 메인 기능 메뉴
+    # =====================================================
+
+    col1, col2, col3, col4 = st.columns(4)
+
+
+    with col1:
+
+        st.info(
+            "📊 실시간 항만 상황"
+        )
+
+        if st.button(
+            "실시간 항구 혼잡도",
+            use_container_width=True
+        ):
+
+            navigate_to(
+                "congestion"
+            )
+
+
+    with col2:
+
+        st.success(
+            "🌱 친환경 에코 운항"
+        )
+
+        if st.button(
+            "E-co로 (에코로)",
+            use_container_width=True
+        ):
+
+            navigate_to(
+                "ecoro"
+            )
+
+
+    with col3:
+
+        st.warning(
+            "🎫 스마트 타임슬롯"
+        )
+
+        if st.button(
+            "입항 예약 (예약 보증금)",
+            use_container_width=True
+        ):
+
+            navigate_to(
+                "reservation"
+            )
+
+
+    with col4:
+
+        st.error(
+            "🧭 안전 접안 지원"
+        )
+
+        if st.button(
+            "입항 가이드",
+            use_container_width=True
+        ):
+
+            navigate_to(
+                "guide"
+            )
+
+    # 라이트모드 / 야간모드 전환
+    dark_mode = st.toggle("🌙 야간모드", key="lighthouse_dark")
+
+    # 등대 표지 그리기
+    draw_lighthouse("dark" if dark_mode else "light")
+
+    # 기존 메인 화면 코드
+    st.title("⚓ 해로(海路): JIT 입항 내비게이션")
+
+    # 여기부터 기존 메인 화면의 나머지 코드를 그대로 유지
+
 
     st.markdown(
         "바다 위의 하이패스, "
