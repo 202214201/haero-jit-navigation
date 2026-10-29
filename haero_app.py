@@ -217,66 +217,92 @@ def congestion_page():
 
 
     # =====================================================
-    # 기존 지도
+    # 항구 / 부두 / 묘박지 중심으로 선박 위치 생성
     # =====================================================
 
     np.random.seed(42)
 
+    port_points = [
+        {
+            "name": "부산항 북항",
+            "lat": 35.103,
+            "lon": 129.040,
+            "status": "제1부두 (혼잡)"
+        },
+        {
+            "name": "감천항",
+            "lat": 35.055,
+            "lon": 129.006,
+            "status": "제1부두 (혼잡)"
+        },
+        {
+            "name": "부산항 신항",
+            "lat": 35.075,
+            "lon": 128.825,
+            "status": "신항 (원활)"
+        },
+        {
+            "name": "북항 외항 묘박지",
+            "lat": 35.075,
+            "lon": 129.075,
+            "status": "외항 묘박지 (매우 혼잡)"
+        },
+        {
+            "name": "감천항 외항 묘박지",
+            "lat": 35.015,
+            "lon": 129.020,
+            "status": "외항 묘박지 (매우 혼잡)"
+        },
+        {
+            "name": "신항 외항 묘박지",
+            "lat": 35.040,
+            "lon": 128.790,
+            "status": "외항 묘박지 (매우 혼잡)"
+        }
+    ]
 
-    map_df = pd.DataFrame({
+    ship_data = []
 
-        "lat":
-            np.random.uniform(
-                35.04,
-                35.12,
-                100
-            ),
+    for point in port_points:
 
-        "lon":
-            np.random.uniform(
-                128.98,
-                129.09,
-                100
-            ),
+        if point["status"] == "외항 묘박지 (매우 혼잡)":
+            n_ships = 18
 
-        "상태":
-            np.random.choice(
+        elif point["status"] == "제1부두 (혼잡)":
+            n_ships = 12
 
-                [
-                    "외항 묘박지 (매우 혼잡)",
-                    "제1부두 (혼잡)",
-                    "신항 (원활)"
-                ],
+        else:
+            n_ships = 7
 
-                100,
+        for _ in range(n_ships):
 
-                p=[
-                    0.6,
-                    0.3,
-                    0.1
-                ]
-            )
-    })
+            ship_data.append({
+                "lat":
+                    point["lat"]
+                    + np.random.normal(0, 0.0025),
 
+                "lon":
+                    point["lon"]
+                    + np.random.normal(0, 0.0025),
+
+                "상태":
+                    point["status"]
+            })
+
+    map_df = pd.DataFrame(
+        ship_data
+    )
 
     color_map = {
-
-        "외항 묘박지 (매우 혼잡)":
-            "#FF0000",
-
-        "제1부두 (혼잡)":
-            "#FFA500",
-
-        "신항 (원활)":
-            "#00FF00"
+        "외항 묘박지 (매우 혼잡)": "#FF0000",
+        "제1부두 (혼잡)": "#FFA500",
+        "신항 (원활)": "#00FF00"
     }
-
 
     map_df["color"] = (
         map_df["상태"]
         .map(color_map)
     )
-
 
     st.map(
         map_df,
@@ -286,10 +312,9 @@ def congestion_page():
         zoom=11
     )
 
-
     st.info(
-        "💡 실시간 교통 흐름을 분석하여 "
-        "초록색(원활) 구역으로 입항 타임슬롯을 추천합니다."
+        "💡 항구·부두·묘박지 주변의 선박 위치를 기반으로 "
+        "항만 혼잡 상황을 시각화합니다."
     )
 
 
