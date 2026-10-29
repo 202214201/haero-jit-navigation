@@ -24,9 +24,7 @@ if "page" not in st.session_state:
 
 
 def navigate_to(page_name):
-
     st.session_state.page = page_name
-
     st.rerun()
 
 
@@ -77,7 +75,8 @@ with st.sidebar:
 
     if st.button(
         "🏠 메인 화면으로",
-        use_container_width=True
+        use_container_width=True,
+        key="sidebar_main"
     ):
 
         navigate_to(
@@ -102,7 +101,7 @@ def main_page():
 
 
     # =====================================================
-    # 2. 등대 표지
+    # 2. 등대 표지 + 라이트/야간모드
     # =====================================================
 
     dark_mode = st.toggle(
@@ -141,7 +140,8 @@ def main_page():
 
         if st.button(
             "실시간 항구 혼잡도",
-            use_container_width=True
+            use_container_width=True,
+            key="btn_congestion"
         ):
 
             navigate_to(
@@ -157,7 +157,8 @@ def main_page():
 
         if st.button(
             "E-co로 (에코로)",
-            use_container_width=True
+            use_container_width=True,
+            key="btn_ecoro"
         ):
 
             navigate_to(
@@ -173,7 +174,8 @@ def main_page():
 
         if st.button(
             "입항 예약 (예약 보증금)",
-            use_container_width=True
+            use_container_width=True,
+            key="btn_reservation"
         ):
 
             navigate_to(
@@ -189,93 +191,8 @@ def main_page():
 
         if st.button(
             "입항 가이드",
-            use_container_width=True
-        ):
-
-            navigate_to(
-                "guide"
-            )
-
-    # 라이트모드 / 야간모드 전환
-    dark_mode = st.toggle("🌙 야간모드", key="lighthouse_dark")
-
-    # 등대 표지 그리기
-    draw_lighthouse("dark" if dark_mode else "light")
-
-    # 기존 메인 화면 코드
-    st.title("⚓ 해로(海路): JIT 입항 내비게이션")
-
-    # 여기부터 기존 메인 화면의 나머지 코드를 그대로 유지
-
-
-    st.markdown(
-        "바다 위의 하이패스, "
-        "대기 없는 항해를 시작하세요."
-    )
-
-    st.write("---")
-
-
-    col1, col2, col3, col4 = st.columns(4)
-
-
-    with col1:
-
-        st.info(
-            "📊 실시간 항만 상황"
-        )
-
-        if st.button(
-            "실시간 항구 혼잡도",
-            use_container_width=True
-        ):
-
-            navigate_to(
-                "congestion"
-            )
-
-
-    with col2:
-
-        st.success(
-            "🌱 친환경 에코 운항"
-        )
-
-        if st.button(
-            "E-co로 (에코로)",
-            use_container_width=True
-        ):
-
-            navigate_to(
-                "ecoro"
-            )
-
-
-    with col3:
-
-        st.warning(
-            "🎫 스마트 타임슬롯"
-        )
-
-        if st.button(
-            "입항 예약 (예약 보증금)",
-            use_container_width=True
-        ):
-
-            navigate_to(
-                "reservation"
-            )
-
-
-    with col4:
-
-        st.error(
-            "🧭 안전 접안 지원"
-        )
-
-        if st.button(
-            "입항 가이드",
-            use_container_width=True
+            use_container_width=True,
+            key="btn_guide"
         ):
 
             navigate_to(
@@ -362,15 +279,10 @@ def congestion_page():
 
 
     st.map(
-
         map_df,
-
         latitude="lat",
-
         longitude="lon",
-
         color="color",
-
         zoom=11
     )
 
@@ -387,7 +299,6 @@ def congestion_page():
 
     st.write("---")
 
-
     st.subheader(
         "🤖 머신러닝 기반 항구 혼잡도 예측"
     )
@@ -403,37 +314,23 @@ def congestion_page():
     with col1:
 
         vessels_in_port = st.number_input(
-
             "현재 항내 선박 수",
-
             min_value=0,
-
             max_value=100,
-
             value=38
         )
 
-
         waiting_vessels = st.number_input(
-
             "외항 대기 선박 수",
-
             min_value=0,
-
             max_value=50,
-
             value=9
         )
 
-
         berth_occupancy = st.slider(
-
             "선석 점유율 (%)",
-
             0,
-
             100,
-
             78
         )
 
@@ -445,37 +342,23 @@ def congestion_page():
     with col2:
 
         arrivals_next_1h = st.number_input(
-
             "향후 1시간 입항 예정 선박 수",
-
             min_value=0,
-
             max_value=30,
-
             value=8
         )
 
-
         departures_next_1h = st.number_input(
-
             "향후 1시간 출항 예정 선박 수",
-
             min_value=0,
-
             max_value=30,
-
             value=5
         )
 
-
         crane_utilization = st.slider(
-
             "크레인 가동률 (%)",
-
             0,
-
             100,
-
             72
         )
 
@@ -487,37 +370,23 @@ def congestion_page():
     with col3:
 
         yard_queue = st.number_input(
-
             "야드 트럭 대기 수",
-
             min_value=0,
-
             max_value=100,
-
             value=16
         )
 
-
         wind_speed = st.number_input(
-
             "풍속 (m/s)",
-
             min_value=0.0,
-
             max_value=30.0,
-
             value=5.0
         )
 
-
         wave_height = st.number_input(
-
             "파고 (m)",
-
             min_value=0.0,
-
             max_value=10.0,
-
             value=1.2
         )
 
@@ -592,13 +461,11 @@ def congestion_page():
         100
     )
 
-
     rf_prediction = np.clip(
         rf_prediction,
         0,
         100
     )
-
 
     ensemble_prediction = np.clip(
         ensemble_prediction,
@@ -613,7 +480,6 @@ def congestion_page():
 
     st.write("---")
 
-
     st.subheader(
         "📊 모델별 혼잡도 예측"
     )
@@ -623,25 +489,19 @@ def congestion_page():
 
 
     result1.metric(
-
         "XGBoost",
-
         f"{xgb_prediction:.1f} / 100"
     )
 
 
     result2.metric(
-
         "Random Forest",
-
         f"{rf_prediction:.1f} / 100"
     )
 
 
     result3.metric(
-
         "앙상블 모델",
-
         f"{ensemble_prediction:.1f} / 100"
     )
 
@@ -683,7 +543,6 @@ def congestion_page():
 
     st.write("---")
 
-
     st.subheader(
         "🤖 최종 AI 판단"
     )
@@ -693,17 +552,13 @@ def congestion_page():
 
 
     result1.metric(
-
         "최종 혼잡도",
-
         f"{prediction:.1f} / 100"
     )
 
 
     result2.metric(
-
         "현재 항만 상태",
-
         congestion_status
     )
 
@@ -753,7 +608,6 @@ def congestion_page():
 
     st.write("---")
 
-
     st.subheader(
         "📈 XGBoost 변수 중요도"
     )
@@ -793,9 +647,7 @@ def congestion_page():
     importance_df = pd.DataFrame({
 
         "변수": [
-
             korean_names[col]
-
             for col in input_data.columns
         ],
 
@@ -814,11 +666,8 @@ def congestion_page():
 
 
     st.bar_chart(
-
         importance_df,
-
         x="변수",
-
         y="중요도"
     )
 
@@ -829,9 +678,9 @@ def congestion_page():
 
     st.write("---")
 
-
     if st.button(
-        "⬅️ 뒤로가기"
+        "⬅️ 뒤로가기",
+        key="back_congestion"
     ):
 
         navigate_to(
@@ -859,21 +708,15 @@ def ecoro_page():
 
 
     col1.metric(
-
         label="현재 속도",
-
         value="15 Knots",
-
         delta="-3 Knots (권고)"
     )
 
 
     col2.metric(
-
         label="예상 유류비 절감액",
-
         value="$ 4,500",
-
         delta="탄소 12% 저감"
     )
 
@@ -886,7 +729,8 @@ def ecoro_page():
 
 
     if st.button(
-        "⬅️ 뒤로가기"
+        "⬅️ 뒤로가기",
+        key="back_ecoro"
     ):
 
         navigate_to(
@@ -917,9 +761,7 @@ def reservation_page():
 
 
         st.selectbox(
-
             "목적지 선석 추천 리스트",
-
             [
                 "부산항 신항 2부두 (추천)",
                 "부산항 제3부두"
@@ -962,7 +804,8 @@ def reservation_page():
 
 
     if st.button(
-        "⬅️ 뒤로가기"
+        "⬅️ 뒤로가기",
+        key="back_reservation"
     ):
 
         navigate_to(
@@ -1009,7 +852,8 @@ def guide_page():
 
 
     if st.button(
-        "⬅️ 뒤로가기"
+        "⬅️ 뒤로가기",
+        key="back_guide"
     ):
 
         navigate_to(
