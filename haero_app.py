@@ -31,6 +31,176 @@ def navigate_to(page_name):
     st.session_state.page = page_name
     st.rerun()
 
+# =========================================================
+# 전체 웹 다크모드 설정
+# =========================================================
+
+def apply_theme(dark_mode):
+
+    if dark_mode:
+
+        st.markdown("""
+        <style>
+
+        /* 전체 웹 배경 */
+        .stApp {
+            background-color: #0E1117;
+            color: #FAFAFA;
+        }
+
+        /* 메인 화면 */
+        [data-testid="stAppViewContainer"] {
+            background-color: #0E1117;
+            color: #FAFAFA;
+        }
+
+        /* 상단 헤더 */
+        [data-testid="stHeader"] {
+            background-color: #0E1117;
+        }
+
+        /* 사이드바 */
+        [data-testid="stSidebar"] {
+            background-color: #161B22;
+        }
+
+        [data-testid="stSidebar"] * {
+            color: #FAFAFA;
+        }
+
+        /* 제목 및 일반 글자 */
+        h1, h2, h3, h4, h5, h6, p, label {
+            color: #FAFAFA !important;
+        }
+
+        /* 일반 텍스트 */
+        [data-testid="stMarkdownContainer"] {
+            color: #FAFAFA;
+        }
+
+        /* 입력창 */
+        input {
+            background-color: #262730 !important;
+            color: #FAFAFA !important;
+        }
+
+        /* Number input */
+        [data-baseweb="input"] {
+            background-color: #262730 !important;
+        }
+
+        [data-baseweb="input"] input {
+            color: #FAFAFA !important;
+        }
+
+        /* Selectbox */
+        [data-baseweb="select"] > div {
+            background-color: #262730 !important;
+            color: #FAFAFA !important;
+        }
+
+        /* Selectbox 펼쳤을 때 */
+        [role="listbox"] {
+            background-color: #262730 !important;
+        }
+
+        [role="option"] {
+            color: #FAFAFA !important;
+        }
+
+        /* 버튼 */
+        .stButton > button {
+            background-color: #262730 !important;
+            color: #FAFAFA !important;
+            border: 1px solid #4A5568 !important;
+        }
+
+        .stButton > button:hover {
+            border-color: #58A6FF !important;
+            color: #58A6FF !important;
+        }
+
+        /* Form 버튼 */
+        [data-testid="stFormSubmitButton"] button {
+            background-color: #262730 !important;
+            color: #FAFAFA !important;
+            border: 1px solid #4A5568 !important;
+        }
+
+        /* Metric */
+        [data-testid="stMetric"] {
+            background-color: #161B22;
+            border: 1px solid #30363D;
+            padding: 15px;
+            border-radius: 12px;
+        }
+
+        [data-testid="stMetricLabel"] {
+            color: #B1BAC4 !important;
+        }
+
+        [data-testid="stMetricValue"] {
+            color: #FAFAFA !important;
+        }
+
+        /* 데이터프레임 */
+        [data-testid="stDataFrame"] {
+            background-color: #161B22;
+        }
+
+        /* Form */
+        [data-testid="stForm"] {
+            background-color: #161B22;
+            border-color: #30363D;
+        }
+
+        /* 구분선 */
+        hr {
+            border-color: #30363D !important;
+        }
+
+        /* 체크박스 글자 */
+        [data-testid="stCheckbox"] label {
+            color: #FAFAFA !important;
+        }
+
+        /* Slider 글자 */
+        [data-testid="stSlider"] {
+            color: #FAFAFA !important;
+        }
+
+        </style>
+        """, unsafe_allow_html=True)
+
+
+    else:
+
+        st.markdown("""
+        <style>
+
+        /* 전체 웹 배경 */
+        .stApp {
+            background-color: #FFFFFF;
+            color: #262730;
+        }
+
+        [data-testid="stAppViewContainer"] {
+            background-color: #FFFFFF;
+            color: #262730;
+        }
+
+        /* 헤더 */
+        [data-testid="stHeader"] {
+            background-color: #FFFFFF;
+        }
+
+        /* 사이드바 */
+        [data-testid="stSidebar"] {
+            background-color: #F7F9FC;
+        }
+
+        </style>
+        """, unsafe_allow_html=True)
 
 # =========================================================
 # 3. 저장된 머신러닝 모델 불러오기
@@ -60,6 +230,18 @@ def load_models():
 
 xgb_model, rf_model, ensemble_model = load_models()
 
+# =========================================================
+# 야간모드 상태 저장
+# =========================================================
+
+if "dark_mode" not in st.session_state:
+    st.session_state.dark_mode = False
+
+
+# 모든 페이지에 현재 테마 적용
+apply_theme(
+    st.session_state.dark_mode
+)
 
 # =========================================================
 # 4. 사이드바
@@ -110,11 +292,11 @@ def main_page():
 
     dark_mode = st.toggle(
         "🌙 야간모드",
-        key="lighthouse_dark"
+        key="dark_mode"
     )
 
     draw_lighthouse(
-        "dark" if dark_mode else "light"
+        "dark" if st.session_state.dark_mode else "light"
     )
 
 
